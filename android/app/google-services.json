@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "708812512262",
+    "firebase_url": "https://ax-crm-269f9-default-rtdb.firebaseio.com",
+    "project_id": "ax-crm-269f9",
+    "storage_bucket": "ax-crm-269f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708812512262:android:116e5fc8f24c03a50fb787",
+        "android_client_info": {
+          "package_name": "com.crm.axcrm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708812512262-42dhtb7ftp1ugra6qt7t6l1vqkai5tt4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNU5IBs4sOqgIUx59YDgP3aCGZetq8B88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708812512262-42dhtb7ftp1ugra6qt7t6l1vqkai5tt4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "708812512262-1sqcl2fdd8jjsce4bnsgkll53c6k47mg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.crm.axcrm"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708812512262:android:fa164f7d1db96b2a0fb787",
+        "android_client_info": {
+          "package_name": "com.crm.crm_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708812512262-ht06ou34m6rvibn7fierfo90jhl8tqc1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.crm.crm_application",
+            "certificate_hash": "c7af73f72eec1cd793d28df4c36d7730c2b09271"
+          }
+        },
+        {
+          "client_id": "708812512262-42dhtb7ftp1ugra6qt7t6l1vqkai5tt4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNU5IBs4sOqgIUx59YDgP3aCGZetq8B88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708812512262-42dhtb7ftp1ugra6qt7t6l1vqkai5tt4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "708812512262-1sqcl2fdd8jjsce4bnsgkll53c6k47mg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.crm.axcrm"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
