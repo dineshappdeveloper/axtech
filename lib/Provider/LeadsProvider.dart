@@ -102,6 +102,50 @@ class LeadsProvider with ChangeNotifier {
       rethrow;
     }
   }
+    Future<void> updateAdditionalNumber(String token, String id,
+      BuildContext context, String addtionalPhone) async {
+    var url = ApiManager.BASE_URL + '${ApiManager.upadteAdditionalPhone}/$id';
+
+    final headers = {
+      'Authorization-token': '3MPHJP0BC63435345341',
+      'Authorization': 'Bearer $token',
+    };
+
+    try {
+      final response = await http.post(Uri.parse(url),
+          headers: headers, body: {"additional_phone": addtionalPhone});
+
+      var responseData = json.decode(response.body);
+      // debugPrint(responseData['message'].toString());
+      log(json.encode(responseData));
+
+      var message = responseData['message'];
+      if (response.statusCode == 200) {
+        _isLoading = false;
+        notifyListeners();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+          ),
+        );
+        // debugPrint('Scheduled Call Deleted.');
+        notifyListeners();
+      } else {
+        _isLoading = false;
+        notifyListeners();
+
+        throw const HttpException('Failed To Scheduled Call Editing.');
+      }
+      _isLoading = false;
+      notifyListeners();
+    } catch (error, s) {
+      print('A');
+      print(error.toString());
+      print(s.toString());
+      rethrow;
+    }
+  }
 
   Future<void> getLeads() async {
     _isFirstLoadRunning = true;

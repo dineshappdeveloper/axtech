@@ -79,6 +79,7 @@ class _TestCallScreenState extends State<TestCallScreen> {
       statusName = '',
       sourceId = '',
       statusId = '',
+      additionalPhone = '',
       assigndUser1 = '',
       assigndUser = '';
   List<NewComment> notes = [];
@@ -143,6 +144,8 @@ class _TestCallScreenState extends State<TestCallScreen> {
             statusId = _leadInfoList[0].lead!.statuses != null
                 ? _leadInfoList[0].lead!.statuses!.id.toString()
                 : '';
+                 additionalPhone = _leadInfoList[0].lead!.additionalPhone.toString();
+
             /* if(_leadInfoList[0].lead!.agents.length>1){
               setState(() {
                 assigndUser1 =
@@ -596,6 +599,7 @@ class _TestCallScreenState extends State<TestCallScreen> {
                                   assignUser: assigndUser,
                                   assignedUsers: assigndUser1,
                                   agents: _leadInfoList[0].lead!.agents!,
+                                  additionalPhone: additionalPhone,
                                 ),
                                 LeadNotesScreen(
                                   notes: notes, leadType: widget.leadType,

@@ -47,6 +47,9 @@ class ApiManager {
 
    static const updateLeadAccept = 'agentAcceptLead';
 
+
+   static const upadteAdditionalPhone = 'lead_update_additional_phone';
+
   ///TODO:For Filter
   static const get_developers = 'get_developers';
   static const users = 'users';

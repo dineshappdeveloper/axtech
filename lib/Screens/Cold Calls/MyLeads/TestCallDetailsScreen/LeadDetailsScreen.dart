@@ -1,9 +1,15 @@
 import 'package:crm_application/Utils/Constant.dart';
+import 'package:crm_application/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../Models/LeadInfoModel.dart';
+import '../../../../Provider/LeadsProvider.dart';
+import '../../../../Utils/Colors.dart';
+import '../../../../Utils/ImageConst.dart';
 
 class LeadDetailsScreen extends StatefulWidget {
   String leadId,
@@ -17,7 +23,9 @@ class LeadDetailsScreen extends StatefulWidget {
       leadPropertyPreference,
       avgAmount,
       assignUser,
+      additionalPhone,
       assignedUsers;
+    
   int agentId;
   List<Agent> agents;
 
@@ -36,6 +44,7 @@ class LeadDetailsScreen extends StatefulWidget {
     required this.avgAmount,
     required this.assignUser,
     required this.assignedUsers,
+    required this.additionalPhone,
     required this.agents,
   }) : super(key: key);
 
@@ -57,6 +66,7 @@ class _LeadDetailsScreenState extends State<LeadDetailsScreen>
       leadAltContact = '',
       leadEmail = '',
       leadPropertyPreference = '',
+      addPhone ='',
       avg_amount = '';
   bool tapDwonLeadContact = false;
   bool tapDwonAltContact = false;
@@ -64,12 +74,17 @@ class _LeadDetailsScreenState extends State<LeadDetailsScreen>
   // late AnimationController copiAnimationController;
   // late Animation curveAnimation;
 
+  TextEditingController _phoneNumberController = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     altContact = widget.leadAltContact;
     agentId = widget.agentId;
+    getPrefs();
+    addPhone = widget.additionalPhone;
+    _phoneNumberController.text = addPhone;
     // print(widget.leadAltContact);
     // copiAnimationController =
     //     AnimationController(vsync: this, duration: const Duration(seconds: 1));
@@ -340,7 +355,121 @@ class _LeadDetailsScreenState extends State<LeadDetailsScreen>
               ],
             ),
           ),
-          const Divider(),
+       
+                     const Divider(),
+            ListTile(
+              title: Row(
+                children: [
+                  const Text(
+                    "Additional Number",
+                    style: TextStyle(
+                        color: Colors.blue, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      _showUpdateDialog();
+                    },
+                    child: Icon(Icons.edit, size: 18, color: themeColor),
+                  )
+                  // addPhone != 'No Additional Phone Number'
+                  //     ? InkWell(
+                  //         onTap: () {
+                  //           _showUpdateDialog();
+                  //         },
+                  //         child: Icon(Icons.edit, size: 18, color: themeColor),
+                  //       )
+                  //     : const SizedBox(),
+                ],
+              ),
+              subtitle: Row(
+                children: [
+                  Text(addPhone),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  AnimatedSize(
+                      curve: Curves.bounceInOut,
+                      duration: const Duration(milliseconds: 500),
+                      child: addPhone != "No Additional Phone Number"
+                          ? GestureDetector(
+                              onTap: () async {
+                                print(addPhone);
+                                setState(() {
+                                  tapDwonAltContact = true;
+                                });
+                                await Clipboard.setData(ClipboardData(
+                                        text: widget.additionalPhone))
+                                    .then((value) {
+                                  Future.delayed(
+                                      const Duration(milliseconds: 500), () {
+                                    setState(() {
+                                      tapDwonAltContact = false;
+                                    });
+                                  });
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        duration: Duration(milliseconds: 300),
+                                        width: 300,
+                                        content: Text(
+                                            'Alternate Phone number copied successfully!'),
+                                        behavior: SnackBarBehavior.floating));
+                              },
+                              // onTapUp: (tapDetails) async {
+                              //   // setState(() {
+                              //   //   tapDwon = false;
+                              //   // });
+                              //   await Clipboard.setData(
+                              //           ClipboardData(text: widget.leadContact))
+                              //       .then((value) => ScaffoldMessenger.of(context)
+                              //           .showSnackBar(const SnackBar(
+                              //               content: Text(
+                              //                   'Phone number copied successfully!'))));
+                              // },
+                              child: Icon(
+                                Icons.copy,
+                                size: tapDwonAltContact ? 40 : 18,
+                              ),
+                              // tooltip: 'Copy Phone Number',
+                            )
+                          : SizedBox()),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  addPhone != 'No Additional Phone Number'
+                      ? InkWell(
+                          onTap: () {
+                            openWhatsapp(addPhone, context);
+                          },
+                          child: Image.asset(
+                            'assets/images/whatsapp.png',
+                            height: 18,
+                            width: 18,
+                          ),
+                        )
+                      : const SizedBox(),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  addPhone != 'No Additional Phone Number'
+                      ? InkWell(
+                          onTap: () {
+                            FlutterPhoneDirectCaller.callNumber(addPhone);
+                          },
+                          child: Image.asset(
+                            ImageConst.call_icon,
+                            height: 18,
+                            color: Colors.green,
+                          ),
+                        )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
+               const Divider(),
           ListTile(
             title: const Text(
               "Email Id",
@@ -425,4 +554,93 @@ class _LeadDetailsScreenState extends State<LeadDetailsScreen>
       )),
     );
   }
+  void _showUpdateDialog() {
+    final leadProvider = Provider.of<LeadsProvider>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update Additional Phone Number'),
+          content: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: themeColor, // Customize border color here
+                width: 1.0, // Customize border width here
+              ),
+            ),
+            child: TextField(
+              controller: _phoneNumberController,
+              inputFormatters: [LengthLimitingTextInputFormatter(10)],
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                labelText: 'Additional Number',
+                border: InputBorder.none, // Remove default border
+                contentPadding: EdgeInsets.all(10.0), // Adjust padding
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: themeColor,
+              ),
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: themeColor,
+              ),
+              child: Text('Submit'),
+              onPressed: () async {
+                String newPhoneNumber = _phoneNumberController.text;
+                showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => const Center(
+                          child: CircularProgressIndicator(),
+                        ));
+                try {
+                  await leadProvider
+                      .updateAdditionalNumber(
+                          authToken, widget.leadId, context, newPhoneNumber)
+                      .then((value) {
+                        _phoneNumberController.text = newPhoneNumber;
+                        // _phoneNumberController.clear();
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     content: Text(
+                    //         'Additional Phone number updated successfully'),
+                    //   ),
+                    // );
+                    
+                  });
+                  setState(() {
+                    addPhone = newPhoneNumber;
+                  });
+                } catch (e) {
+                  print(e.toString());
+                }
+                navigatorKey.currentState!.pop(context);
+                navigatorKey.currentState!.pop(context);
+                // navigatorKey.currentState!.popUntil((route) => route.isFirst);
+
+                // try {
+
+                // }
+                // oncatch (e) {
+                //
+
+                // }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  
+}
 }

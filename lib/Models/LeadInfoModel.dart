@@ -49,6 +49,7 @@ class Lead {
     required this.source,
     required this.priority,
     required this.comment,
+    required this.additionalPhone,
     //required this.additionalComment,
     //required this.customerId,
     //    required this.developerId,
@@ -82,6 +83,7 @@ class Lead {
   String? name;
   String? email;
   String? phone;
+  String? additionalPhone;
   String? altPhone;
   DateTime date;
   String? dob;
@@ -126,6 +128,7 @@ class Lead {
     email: json["email"],
     phone: json["phone"],
     altPhone: json["alt_phone"] ?? 'No Alternate Number',
+    additionalPhone: json['additional_phone']??'No Additional Phone Number',
     date: DateTime.parse(json["date"]),
     dob: json["dob"],
     source: json["source"],
@@ -167,6 +170,7 @@ class Lead {
     "email": email,
     "phone": phone,
     "alt_phone": altPhone,
+    "additional_phone":additionalPhone,
     "date": date.toIso8601String(),
     "dob": dob,
     "source": source,

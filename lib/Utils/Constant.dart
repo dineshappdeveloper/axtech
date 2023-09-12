@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:contacts_service/contacts_service.dart';
 import 'package:crm_application/Widgets/contactLstPage.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Const {
   static const FCM_TOKEN = 'FCM_TOKEN';
@@ -14,6 +16,27 @@ class Const {
 int myId=0;
 
 
+void openWhatsapp(String number, BuildContext context) async {
+  var whatsappURlAndroid = "whatsapp://send?phone=$number";
+  var whatappURLIos = "https://wa.me/$number";
+  if (Platform.isIOS) {
+    // for iOS phone only
+    if (await canLaunch(whatappURLIos)) {
+      await launch(whatappURLIos, forceSafariVC: false);
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("whatsapp no installed")));
+    }
+  } else {
+    // android , web
+    if (await canLaunch(whatsappURlAndroid)) {
+      await launch(whatsappURlAndroid);
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("whatsapp no installed")));
+    }
+  }
+}
 Future<void> saveContactInPhone(Contact contact, BuildContext context) async {
   List<Contact> matchedContact;
   bool contactFound;
